@@ -1,7 +1,12 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+# Tambahkan import ini agar pickle bisa memuat objek model dengan benar
+from imblearn.over_sampling import SMOTE
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, GradientBoostingClassifier
+from sklearn.preprocessing import StandardScaler
 
 # Load assets menggunakan pickle
 @st.cache_resource
@@ -12,8 +17,8 @@ def load_assets():
         with open('scaler.pkl', 'rb') as f:
             scaler = pickle.load(f)
         return models, scaler
-    except FileNotFoundError:
-        st.error("File model .pkl tidak ditemukan. Silakan jalankan sel ekspor di notebook terlebih dahulu.")
+    except Exception as e:
+        st.error(f"Gagal memuat model: {e}")
         return None, None
 
 models, scaler = load_assets()
@@ -61,6 +66,7 @@ if models and scaler:
         }
         
         input_df = pd.DataFrame([data])
+        # Pastikan urutan kolom sesuai dengan saat training
         input_scaled = scaler.transform(input_df)
         
         model = models[selected_algo]
