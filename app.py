@@ -1,4 +1,4 @@
-
+%%writefile app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -64,11 +64,11 @@ if models and scaler:
             "specialisation": 0 if specialisation == "Mkt&Fin" else 1,
             "mba_p": mba_p
         }
-        
+
         input_df = pd.DataFrame([data])
         # Pastikan urutan kolom sesuai dengan saat training
         input_scaled = scaler.transform(input_df)
-        
+
         model = models[selected_algo]
         prediction = model.predict(input_scaled)
         prob = model.predict_proba(input_scaled)[0]
